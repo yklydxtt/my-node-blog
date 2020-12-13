@@ -1,0 +1,13 @@
+{
+  "name": "blog-1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "nodemon server.js",
+    "dev":"nodemon server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
