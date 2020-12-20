@@ -1,53 +1,66 @@
+const { exec } = require("../db/mysql");
+
 const getList = (author, keyword) => {
-  // 先返回假数据（格式是正确的）
-  return [
-    {
-      id: 1,
-      title: "标题A",
-      content: "内容A",
-      createTime: 1607824783126,
-      author: "张三",
-    },
-    {
-      id: 2,
-      title: "标题B",
-      content: "内容B",
-      createTime: 1607824783127,
-      author: "李四",
-    },
-  ];
+  let sql = `SELECT * FROM blogs WHERE 1=1 `;
+  if (author) {
+    sql += `and author='${author}' `;
+  }
+  if (keyword) {
+    sql += `and title like '%${keyword}%' `;
+  }
+  sql += `ORDER BY createtime desc;`;
+
+  // 返回 promise
+  return exec(sql);
 };
 
 const getDetail = id => {
-  // 先返回假数据
-  return {
-    id: 1,
-    title: "标题A",
-    content: "内容A",
-    createTime: 1607824783126,
-    author: "张三",
-  };
+  const sql = `select * from blogs where id=${id}`;
+  return exec(sql);
 };
 
 const newBlog = (blogData = {}) => {
-  // blogData是一个博客对象包含title、content
-  return {
-    id: 3,
-  };
+  // blogData是一个博客对象包含 title、content、author 属性
+  const { title, content, author } = blogData;
+  const createTime = Date.now();
+  let sql = `insert into blogs (title,content,createTime,author)
+  values ('${title}','${content}','${createTime}','${author}')
+  `;
+  return exec(sql).then(insertData => {
+    console.log(insertData, "insertData");
+    return {
+      id: insertData.insertId,
+    };
+  });
 };
 
 const updateBlog = (id, blogData = {}) => {
-  // blogData是一个博客对象包含title、content
-  return true;
+  // blogData是一个博客对象包含 title、content 属性
+  const { title, content } = blogData;
+  let sql = `update blogs set title='${title}',content='${content}' where id=${id}`;
+  return exec(sql).then(updateData => {
+    console.log("updateData is", updateData);
+    if (updateData.affectedRows > 0) {
+      return true;
+    }
+    return false;
+  });
 };
 
-const delBlog = id => {
-  return true;
+const delBlog = (id, author) => {
+  const sql = `delete from blogs where id=${id} and author='${author}'`;
+  return exec(sql).then(deleteData => {
+    console.log("deleteData is", deleteData);
+    if (deleteData.affectedRows > 0) {
+      return true;
+    }
+    return false;
+  });
 };
 module.exports = {
   getList,
   getDetail,
   newBlog,
   updateBlog,
-  delBlog
+  delBlog,
 };
