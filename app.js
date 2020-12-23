@@ -35,6 +35,21 @@ const serverHandle = (req, res) => {
   const url = req.url;
   req.path = url.split("?")[0];
 
+  // 解析cookie
+  req.cookie = {};
+  const cookieStr = req.headers.cookie || "";
+  cookieStr.split(";").forEach(item => {
+    if (!item) {
+      return;
+    }
+    const arr = item.split("=");
+    const key = arr[0].trim();
+    const val = arr[1];
+    console.log(key,val);
+    req.cookie[key] = val;
+  });
+  console.log("cookie is", req.cookie);
+
   // 解析query
   req.query = querystring.parse(url.split("?")[1]);
 
@@ -51,7 +66,7 @@ const serverHandle = (req, res) => {
       return;
     }
 
-    //处理user路由
+    // 处理user路由
     const userResult = handleUserRouter(req, res);
     if (userResult) {
       userResult.then(userData => {
@@ -60,7 +75,7 @@ const serverHandle = (req, res) => {
       return;
     }
 
-    //未命中路由返回404
+    // 未命中路由返回404
     res.writeHead(404, { "Content-type": "text/plain" });
     res.write("404 not found");
     res.end();
