@@ -31,7 +31,7 @@ const handleBlogRouter = (req, res) => {
     const result = getList(author, keyword);
     return result.then(listData => {
       return new SuccessModel(listData);
-    });
+    }).catch(() => new ErrorModel('系统异常'));
   }
 
   // 获取博客详情
@@ -39,7 +39,7 @@ const handleBlogRouter = (req, res) => {
     const result = getDetail(id);
     return result.then(detailData => {
       return new SuccessModel(detailData);
-    });
+    }).catch(() => new ErrorModel('系统异常'));
   }
 
   // 新建一篇博客
