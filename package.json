@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "cross-env": "^7.0.3",
-    "mysql": "^2.18.1"
+    "mysql": "^2.18.1",
+    "redis": "^3.0.2"
   }
 }
